@@ -7,6 +7,13 @@ widescreen: true
 theme: flatly
 ---
 
+```{r setup, include=FALSE}
+library(readxl)
+library(ggplot2)
+
+datos <- read_excel("C:/Users/sandr/Documents/DATA SCIENCE/TRABAJO-FINAL-DATA-SCIENCE/Mental_Health_Lifestyle_Dataset.xlsx")
+```
+
 # FACTORES QUE INFLUYEN EN LA FELICIDAD. **Un Análisis Basado en Hábitos y Variables Psicológicas**
 
 ## 1. OBJETIVO
@@ -108,7 +115,7 @@ ggplot(datos, aes(x = `Happiness Score`)) +
   theme_minimal()
 ```
 
-##  EJERCICIO FÍSICO Y FELICICDAD
+## EJERCICIO FÍSICO Y FELICICDAD
 
 ```{r EJERCICIO, echo=FALSE}
 ggplot(datos, aes(x = `Exercise Level`, y = `Happiness Score`)) +
@@ -143,7 +150,7 @@ cor(datos$`Sleep Hours`, datos$`Happiness Score`)
 
 ```
 
-##  TIEMPO FRENTE A PANTALLAS
+## TIEMPO FRENTE A PANTALLAS
 
 ```{r echo=FALSE}
 ggplot(datos, aes(x = `Screen Time per Day (Hours)`, y = `Happiness Score`)) +
@@ -169,17 +176,162 @@ ggplot(datos, aes(x = `Diet Type`, y = `Happiness Score`)) +
 
 ```
 
-
-
 ------------------------------------------------------------------------
 
 ### ANOVA significativo
 
 ```{r echo=FALSE}
+
 anova_dieta <- aov(`Happiness Score` ~ `Diet Type`, data = datos)
 summary(anova_dieta)
 
 ```
 
+## HABITOS SALUDABLES
+
+```{r echo=FALSE}
+# Crear nuevas variables binarias para cada hábito saludable
+datos <- datos %>%
+  mutate(
+    ejercicio_saludable = `Exercise Level` %in% c("Moderate", "High"),
+    sueno_saludable = between(`Sleep Hours`, 7, 9),
+    dieta_saludable = `Diet Type` %in% c("Balanced", "Vegan", "Vegetarian"),
+    screen_saludable = `Screen Time per Day (Hours)` < 6,
+    trabajo_saludable = `Work Hours per Week` < 40,
+    social_saludable = `Social Interaction Score` > 5,
+    
+    # Índice total de hábitos saludables (de 0 a 4)
+    indice_salud = ejercicio_saludable + sueno_saludable + dieta_saludable + screen_saludable + trabajo_saludable + social_saludable
+  )
 
 
+
+ggplot(data = datos, aes(x = factor(`indice_salud`), y = `Happiness Score`)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Felicidad según número de hábitos saludables",
+       x = "Número de hábitos saludables",
+       y = "Happiness Score") +
+  theme_minimal()
+
+
+```
+
+# 4. VARIABLES DEMOGRÁFICAS
+
+## GÉNERO
+
+```{r echo=FALSE}
+ggplot(datos, aes(x = `Gender`, y = `Happiness Score`)) +
+  geom_boxplot(fill = "pink") +
+  labs(title = "Felicidad por género", x = "Género", y = "Happiness Score") +
+  theme_minimal()
+
+```
+
+------------------------------------------------------------------------
+
+### ANOVA
+
+```{r echo=FALSE}
+anova_genero <- aov(`Happiness Score` ~ `Gender`, data = datos)
+summary(anova_genero)
+```
+
+------------------------------------------------------------------------
+
+## EN FUNCIÓN DEL PAÍS
+
+```{r echo=FALSE}
+ggplot(datos, aes(x = `Country`, y = `Happiness Score`)) +
+  geom_boxplot() +
+  labs(title = "Felicidad por país", x = "País", y = "Happiness Score") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_minimal()
+
+```
+
+------------------------------------------------------------------------
+
+### ANOVA
+
+```{r echo=FALSE}
+anova_pais <- aov(`Happiness Score` ~ `Country`, data = datos)
+summary(anova_pais)
+```
+
+## EDAD
+
+```{r echo=FALSE}
+# Edad y felicidad
+datos <- datos %>%
+  mutate(grupo_edad = cut(Age, breaks = c(0, 18, 30, 45, 60, 100),
+                          labels = c("<18", "18-30", "30-45", "45-60", "60+")))
+
+ggplot(datos, aes(x = grupo_edad, y = `Happiness Score`)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Felicidad por grupo de edad", x = "Grupo de Edad", y = "Happiness Score") +
+  theme_minimal()
+
+```
+
+------------------------------------------------------------------------
+
+### ANOVA
+
+```{r echo=FALSE}
+anova_edad <- aov(`Happiness Score` ~ grupo_edad, data = datos)
+summary(anova_edad)
+```
+
+# 5. VISUALIZACIÓN DE VARIABLES PSICOLÓGICAS
+
+## ESTRÉS Y FELICIDAD
+
+```{r echo=FALSE}
+ggplot(datos, aes(x = `Stress Level`, y = `Happiness Score`)) +
+  geom_boxplot(fill = "lightyellow") +
+  labs(title = "Felicidad según nivel de estrés", 
+       x = "Nivel de estrés", 
+       y = "Happiness Score") +
+  theme_minimal()
+```
+
+---
+
+### *ANOVA*
+
+```{r echo=FALSE}
+anova_estres <- aov(`Happiness Score` ~ `Stress Level`, data = datos)
+summary(anova_estres)
+```
+
+## CONDICIÓN MENTAL Y FELICIDAD
+
+```{r echo=FALSE}
+ggplot(datos, aes(x = `Mental Health Condition`, y = `Happiness Score`)) +
+  geom_boxplot(fill = "lightcyan") +
+  labs(title = "Felicidad según condición mental", 
+       x = "Condición de salud mental", 
+       y = "Happiness Score") +
+  theme_minimal()
+```
+
+---
+
+## ANÁLISIS DE REGRESIÓN: Predictores de la felicidad
+
+```{r echo=FALSE}
+modelo <- lm(`Happiness Score` ~ `Sleep Hours` + `Exercise Level` + `Diet Type` + 
+               `Screen Time per Day (Hours)` + `Work Hours per Week` +
+               `Social Interaction Score` + `Gender` + `Stress Level` + 
+               `Mental Health Condition` + `Age` + `Country`, data = datos)
+
+summary(modelo)
+```
+
+## EJERCICIO Y DIETA
+
+```{r echo=FALSE}
+modelo_interaccion <- lm(`Happiness Score` ~ `Exercise Level` * `Diet Type`, data = datos)
+summary(modelo_interaccion)
+```
