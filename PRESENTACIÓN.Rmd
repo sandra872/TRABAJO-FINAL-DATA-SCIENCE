@@ -1,5 +1,5 @@
 ---
-title: "PRESENTACION TRABAJO FINAL"
+title: "PRESENTACION TRABAJO FINAL DATA SCIENCE"
 author: "Sandra Pardo y Marta Prieto"
 date: "2025-05-31"
 output: ioslides_presentation
@@ -16,7 +16,9 @@ datos <- read_excel("C:/Users/sandr/Documents/DATA SCIENCE/TRABAJO-FINAL-DATA-SC
 
 # FACTORES QUE INFLUYEN EN LA FELICIDAD. **Un Análisis Basado en Hábitos y Variables Psicológicas**
 
-## 1. OBJETIVO
+# 1. INTRODUCCIÓN
+
+## OBJETIVO
 
 Explorar la relación entre el nivel de felicidad (medido por el Happiness Score) y diversos factores personales, incluyendo:
 
@@ -26,7 +28,7 @@ Explorar la relación entre el nivel de felicidad (medido por el Happiness Score
 
 -   Características demográficas (edad, género, país)
 
-## 2. FUENTE DE DATOS
+## FUENTE DE DATOS
 
 -   Dataset: Mental Health and Lifestyle Habits (2019–2024)
 
@@ -34,11 +36,35 @@ Explorar la relación entre el nivel de felicidad (medido por el Happiness Score
 
     -   <https://www.kaggle.com/datasets/atharvasoundankar/mental-health-and-lifestyle-habits-2019-2024>
 
--   Variables clave:
+-   **3000 casos**
 
-    -   Variable dependiente: Happiness Score (0–10)
+-   Información diversa sobre:
 
-    -   Variables independientes: exercise_level, sleep_hours, diet_type, screen_time, social_interaction, mental_health_status, etc.
+    -   hábitos de vida
+
+    -   Salud mental
+
+    -   Datos geográficos
+
+## METODOLOGÍA
+
+-   Análisis descriptivos para ver la distribución de diversas variables
+
+-   Análisis de varianza (ANOVA)
+
+-   Análisis de correlación
+
+-   Modelos de regresión lineal múltiple
+
+## PROCESAMIENTO DE DATOS
+
+-   Se eliminaron observaciones con valores faltantes (NA) para mantener la calidad del análisis.
+
+-   Recodificación de variables categóricas como factores (`as.factor()`).
+
+-   Se generaron variables **binarias** para hábitos saludables.
+
+-   Construcción de un índice para hábitos saludables (0-6)
 
 # 3. ANÁLISIS DE DATOS
 
@@ -187,6 +213,10 @@ summary(anova_dieta)
 
 ```
 
+------------------------------------------------------------------------
+
+![](images/Captura%20de%20pantalla%20(2)-01.png "Comparación de la felicidad según tipo de dieta (Test de Tukey)")
+
 ## HABITOS SALUDABLES
 
 ```{r echo=FALSE}
@@ -236,8 +266,6 @@ ggplot(datos, aes(x = `Gender`, y = `Happiness Score`)) +
 anova_genero <- aov(`Happiness Score` ~ `Gender`, data = datos)
 summary(anova_genero)
 ```
-
-------------------------------------------------------------------------
 
 ## EN FUNCIÓN DEL PAÍS
 
@@ -296,7 +324,7 @@ ggplot(datos, aes(x = `Stress Level`, y = `Happiness Score`)) +
   theme_minimal()
 ```
 
----
+------------------------------------------------------------------------
 
 ### *ANOVA*
 
@@ -316,11 +344,9 @@ ggplot(datos, aes(x = `Mental Health Condition`, y = `Happiness Score`)) +
   theme_minimal()
 ```
 
----
-
 ## ANÁLISIS DE REGRESIÓN: Predictores de la felicidad
 
-```{r echo=FALSE}
+```{r include=FALSE}
 modelo <- lm(`Happiness Score` ~ `Sleep Hours` + `Exercise Level` + `Diet Type` + 
                `Screen Time per Day (Hours)` + `Work Hours per Week` +
                `Social Interaction Score` + `Gender` + `Stress Level` + 
@@ -329,9 +355,44 @@ modelo <- lm(`Happiness Score` ~ `Sleep Hours` + `Exercise Level` + `Diet Type` 
 summary(modelo)
 ```
 
+![](images/Captura de pantalla (4).png){width="413"}
+
 ## EJERCICIO Y DIETA
 
+![](images/Captura%20de%20pantalla%20(3).png){width="800"}
+
+## MULTICOLINEALIDAD
+
+```{r include=FALSE}
+# Multicolinealidad
+library(car)
+vif(modelo) 
+
+# Diagnóstico gráfico
+plot(modelo)  
+
+# Transformación logarítmica de felicidad
+datos$happiness_score_log <- log(datos$`Happiness Score` + 1)
+
+# Modelo con variable transformada
+modelo_log <- lm(happiness_score_log ~ `Sleep Hours` + `Exercise Level` + `Diet Type` + 
+                   `Screen Time per Day (Hours)` + `Work Hours per Week` +
+                   `Social Interaction Score` + `Gender` + `Stress Level` + 
+                   `Mental Health Condition` + `Age` + `Country`, data = datos)
+
+# Resumen del modelo transformado
+summary(modelo_log)
+
+# Gráfico QQ
+qqnorm(rstandard(modelo_log))
+qqline(rstandard(modelo_log), col = "red")
+
+
+```
+
 ```{r echo=FALSE}
-modelo_interaccion <- lm(`Happiness Score` ~ `Exercise Level` * `Diet Type`, data = datos)
-summary(modelo_interaccion)
+# 4 gráficos de diagnóstico
+par(mfrow = c(2, 2)) 
+plot(modelo_log)
+
 ```
