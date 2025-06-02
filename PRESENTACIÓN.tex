@@ -1,0 +1,204 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\usetheme[]{Madrid}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={PRESENTACION TRABAJO FINAL},
+  pdfauthor={Sandra Pardo y Marta Prieto},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{PRESENTACION TRABAJO FINAL}
+\author{Sandra Pardo y Marta Prieto}
+\date{2025-05-31}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{\texorpdfstring{FACTORES QUE INFLUYEN EN LA FELICIDAD.
+\textbf{Un Análisis Basado en Hábitos y Variables
+Psicológicas}}{FACTORES QUE INFLUYEN EN LA FELICIDAD. Un Análisis Basado en Hábitos y Variables Psicológicas}}\label{factores-que-influyen-en-la-felicidad.-un-anuxe1lisis-basado-en-huxe1bitos-y-variables-psicoluxf3gicas}
+
+\begin{frame}{1. OBJETIVO}
+\phantomsection\label{objetivo}
+Explorar la relación entre el nivel de felicidad (medido por el
+Happiness Score) y diversos factores personales, incluyendo:
+
+\begin{itemize}
+\item
+  Hábitos de vida (ejercicio, sueño, dieta, uso de pantallas)
+\item
+  Factores psicológicos (nivel de estrés, salud mental)
+\item
+  Características demográficas (edad, género, país)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2. FUENTE DE DATOS}
+\phantomsection\label{fuente-de-datos}
+\begin{itemize}
+\item
+  Dataset: Mental Health and Lifestyle Habits (2019--2024)
+\item
+  Disponible en Kaggle:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \url{https://www.kaggle.com/datasets/atharvasoundankar/mental-health-and-lifestyle-habits-2019-2024}
+  \end{itemize}
+\item
+  Variables clave:
+
+  \begin{itemize}
+  \item
+    Variable dependiente: Happiness Score (0--10)
+  \item
+    Variables independientes: exercise\_level, sleep\_hours, diet\_type,
+    screen\_time, social\_interaction, mental\_health\_status, etc.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{3. DISTRIBUCIÓN DE LA FELICIDAD}
+\phantomsection\label{distribuciuxf3n-de-la-felicidad}
+\includegraphics{PRESENTACIÓN_files/figure-beamer/histograma-felicidad-1.pdf}
+\end{frame}
+
+\begin{frame}{4. EJERCICIO FÍSICO Y FELICICDAD}
+\phantomsection\label{ejercicio-fuxedsico-y-felicicdad}
+\includegraphics{PRESENTACIÓN_files/figure-beamer/EJERCICIO-1.pdf}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{Análisis de varianza (ANOVA) para ejercicio y felicidad}
+\phantomsection\label{anuxe1lisis-de-varianza-anova-para-ejercicio-y-felicidad}
+\begin{verbatim}
+##                    Df Sum Sq Mean Sq F value Pr(>F)  
+## `Exercise Level`    2     35  17.376   2.659 0.0702 .
+## Residuals        2997  19583   6.534                 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}{5. VARIABLES DEMOGRÁFICAS}
+\phantomsection\label{variables-demogruxe1ficas}
+\end{frame}
+
+\begin{frame}{6. FACTORES PSICOLÓGICOS}
+\phantomsection\label{factores-psicoluxf3gicos}
+\end{frame}
+
+\begin{frame}{7. MODELO DE REGRESIÓN}
+\phantomsection\label{modelo-de-regresiuxf3n}
+\end{frame}
+
+\begin{frame}{8. TRANSFORMACIÓN LOGARITMICA (OPCIONAL)}
+\phantomsection\label{transformaciuxf3n-logaritmica-opcional}
+\end{frame}
+
+\begin{frame}{9. CONCLUSIONES}
+\phantomsection\label{conclusiones}
+\end{frame}
+
+\end{document}

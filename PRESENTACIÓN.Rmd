@@ -1,0 +1,189 @@
+---
+title: "PRESENTACION TRABAJO FINAL"
+author: "Sandra Pardo y Marta Prieto"
+date: "2025-05-31"
+output: ioslides_presentation
+widescreen: true
+theme: flatly
+---
+
+# FACTORES QUE INFLUYEN EN LA FELICIDAD. **Un Análisis Basado en Hábitos y Variables Psicológicas**
+
+## 1. OBJETIVO
+
+Explorar la relación entre el nivel de felicidad (medido por el Happiness Score) y diversos factores personales, incluyendo:
+
+-   Hábitos de vida (ejercicio, sueño, dieta, uso de pantallas)
+
+-   Factores psicológicos (nivel de estrés, salud mental)
+
+-   Características demográficas (edad, género, país)
+
+## 2. FUENTE DE DATOS
+
+-   Dataset: Mental Health and Lifestyle Habits (2019–2024)
+
+-   Disponible en Kaggle:
+
+    -   <https://www.kaggle.com/datasets/atharvasoundankar/mental-health-and-lifestyle-habits-2019-2024>
+
+-   Variables clave:
+
+    -   Variable dependiente: Happiness Score (0–10)
+
+    -   Variables independientes: exercise_level, sleep_hours, diet_type, screen_time, social_interaction, mental_health_status, etc.
+
+# 3. ANÁLISIS DE DATOS
+
+## DISTRIBUCIÓN DE LA FELICIDAD
+
+```{r, include=FALSE}
+
+library(readxl)
+datos <- read_excel("C:/Users/sandr/Documents/DATA SCIENCE/TRABAJO-FINAL-DATA-SCIENCE/Mental_Health_Lifestyle_Dataset.xlsx")
+library(janitor)
+
+# Limpiar nombres de columna: todo en minúscula y con guiones bajos
+datos <- clean_names(datos)
+
+# Verificar nuevos nombres
+colnames(datos)
+
+# Convertir variables categóricas a factores
+library(dplyr)
+
+datos <- datos %>%
+  mutate(
+    gender = as.factor(gender),
+    exercise_level = as.factor(exercise_level),
+    diet_type = as.factor(diet_type),
+    stress_level = as.factor(stress_level),
+    mental_health_condition = as.factor(mental_health_condition),
+    country = as.factor(country)
+  )
+# Ver las primeras filas
+head(datos)
+
+# Ver estructura general
+str(datos)
+
+# Revisión de datos
+summary(datos)
+
+# Ver nombres de columnas
+colnames(datos)
+
+# Ver valores faltantes
+colSums(is.na(datos))
+
+# Valores únicos por variable
+sapply(datos, function(x) length(unique(x)))
+
+# Eliminar valores faltantes
+library(tidyr)
+datos <- datos %>% drop_na()
+
+# Crear nuevas variables binarias para cada hábito saludable
+datos <- datos %>%
+  mutate(
+    ejercicio_saludable = exercise_level %in% c("Moderate", "High"),
+    sueno_saludable = between(sleep_hours, 7, 9),
+    dieta_saludable = diet_type %in% c("Balanced", "Vegan", "Vegetarian"),
+    screen_saludable = screen_time_per_day_hours < 6,
+    trabajo_saludable = work_hours_per_week < 40,
+    social_saludable = social_interaction_score > 5,
+    
+    # Índice total de hábitos saludables (de 0 a 4)
+    indice_salud = ejercicio_saludable + sueno_saludable + dieta_saludable + screen_saludable + trabajo_saludable + social_saludable
+  )
+```
+
+```{r histograma-felicidad, echo=FALSE}
+library(readxl)
+datos <- read_excel("C:/Users/sandr/Documents/DATA SCIENCE/TRABAJO-FINAL-DATA-SCIENCE/Mental_Health_Lifestyle_Dataset.xlsx")
+library(ggplot2)
+ggplot(datos, aes(x = `Happiness Score`)) +
+  geom_histogram(bins = 30, fill = "steelblue") +
+  labs(title = "Distribución de la felicidad", x = "Happiness Score", y = "Frecuencia") +
+  theme_minimal()
+```
+
+##  EJERCICIO FÍSICO Y FELICICDAD
+
+```{r EJERCICIO, echo=FALSE}
+ggplot(datos, aes(x = `Exercise Level`, y = `Happiness Score`)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(title = "Felicidad según nivel de ejercicio",
+       x = "Nivel de ejercicio",
+       y = "Happiness Score") +
+  theme_minimal()
+
+```
+
+------------------------------------------------------------------------
+
+### Análisis de varianza (ANOVA) para ejercicio y felicidad
+
+```{r ANOVA, echo=FALSE}
+anova_ejercicio <- aov(`Happiness Score` ~ `Exercise Level`, data = datos)
+summary(anova_ejercicio)
+```
+
+## HORAS DE SUEÑO
+
+```{r echo=FALSE}
+library(ggplot2)
+datos %>%
+  mutate(rango_sueno = cut(`Sleep Hours`, breaks = c(0, 4, 6, 8, 10), labels = c("<4h", "4–6h", "6–8h", "8–10h"))) %>%
+  ggplot(aes(x = rango_sueno, y = `Happiness Score`)) +
+  geom_boxplot(fill = "skyblue") +
+  labs(title = "Felicidad según rango de horas de sueño", x = "Horas de sueño", y = "Happiness Score") +
+  theme_minimal()
+cor(datos$`Sleep Hours`, datos$`Happiness Score`)  
+
+```
+
+##  TIEMPO FRENTE A PANTALLAS
+
+```{r echo=FALSE}
+ggplot(datos, aes(x = `Screen Time per Day (Hours)`, y = `Happiness Score`)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", color = "purple") +
+  labs(title = "Relación entre tiempo de pantalla y felicidad",
+       x = "Horas frente a pantalla",
+       y = "Happiness Score") +
+  theme_minimal()
+cor(datos$`Screen Time per Day (Hours)`, datos$`Happiness Score`)
+
+```
+
+## DIETA
+
+```{r echo=FALSE}
+ggplot(datos, aes(x = `Diet Type`, y = `Happiness Score`)) +
+  geom_boxplot(fill = "lightcoral") +
+  labs(title = "Felicidad según tipo de dieta",
+       x = "Tipo de dieta",
+       y = "Happiness Score") +
+  theme_minimal()
+
+```
+
+------------------------------------------------------------------------
+
+### ANOVA significativo
+
+```{r echo=FALSE}
+anova_dieta <- aov(`Happiness Score` ~ `Diet Type`, data = datos)
+summary(anova_dieta)
+
+```
+
+## HORAS DE TRABAJO
+
+
+
+
+## 8. TRANSFORMACIÓN LOGARITMICA (OPCIONAL)
+
+## 9. CONCLUSIONES
