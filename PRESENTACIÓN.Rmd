@@ -66,7 +66,7 @@ Explorar la relación entre el nivel de felicidad (medido por el Happiness Score
 
 -   Construcción de un índice para hábitos saludables (0-6)
 
-# 3. ANÁLISIS DE DATOS
+# 2. ANÁLISIS DE DATOS
 
 ## DISTRIBUCIÓN DE LA FELICIDAD
 
@@ -355,7 +355,7 @@ modelo <- lm(`Happiness Score` ~ `Sleep Hours` + `Exercise Level` + `Diet Type` 
 summary(modelo)
 ```
 
-![](images/Captura de pantalla (4).png){width="413"}
+![](images/Captura%20de%20pantalla%20(4).png){width="413"}
 
 ## EJERCICIO Y DIETA
 
