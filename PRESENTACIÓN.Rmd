@@ -169,6 +169,8 @@ ggplot(datos, aes(x = `Diet Type`, y = `Happiness Score`)) +
 
 ```
 
+
+
 ------------------------------------------------------------------------
 
 ### ANOVA significativo
@@ -179,11 +181,5 @@ summary(anova_dieta)
 
 ```
 
-## HORAS DE TRABAJO
 
 
-
-
-## 8. TRANSFORMACIÓN LOGARITMICA (OPCIONAL)
-
-## 9. CONCLUSIONES
